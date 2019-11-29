@@ -140,40 +140,43 @@ ex ()
 
 function swap()
 {
-    local TMPFILE=tmp.$$
-    mv "$1" $TMPFILE && mv "$2" "$1" && mv $TMPFILE "$2"
+  local TMPFILE=tmp.$$
+  mv "$1" $TMPFILE && mv "$2" "$1" && mv $TMPFILE "$2"
 }
 
 function chcc {
-    case "$1" in
-        --unset)        unset CC ; unset CXX ;;
+  case "$1" in
+    --unset)        unset CC ; unset CXX ;;
 
-        clang)          export CC=clang ; export CXX=clang++         ;;
-        clang-*)        export CC=$1    ; export CXX=clang++-${1#*-} ;;
-        gcc)            export CC=gcc   ; export CXX=g++             ;;
-        gcc-*)          export CC=$1    ; export CXX=g++-${1#*-}     ;;
+    clang)          export CC=clang ; export CXX=clang++         ;;
+    clang-*)        export CC=$1    ; export CXX=clang++-${1#*-} ;;
+    gcc)            export CC=gcc   ; export CXX=g++             ;;
+    gcc-*)          export CC=$1    ; export CXX=g++-${1#*-}     ;;
 
-                    # ex) chcc -m32
-        -*)         [ "$CC" = "" ] || export CC="$CC $1"
-                    ;;
+    # ex) chcc -m32
+    -*)         [ "$CC" = "" ] || export CC="$CC $1"             ;;
 
-        /*)         local option=$( echo "$1" | sed 's/./-/' )
-                    [ "$CXX" = "" ] || export CXX="$CC $option"
-                    ;;
+    /*)         local option=$( echo "$1" | sed 's/./-/' )
+                [ "$CXX" = "" ] || export CXX="$CC $option"
+                ;;
 
-                    # ex) chcc +ccache
-        +*)         local prefix=$( echo "$1" | sed 's/.//' )
-                    [ "$CC"  = "" ] || export CC="$prefix $CC"
-                    [ "$CXX" = "" ] || export CXX="$prefix $CXX"
-                    ;;
+                # ex) chcc +ccache
+    +*)         local prefix=$( echo "$1" | sed 's/.//' )
+                [ "$CC"  = "" ] || export CC="$prefix $CC"
+                [ "$CXX" = "" ] || export CXX="$prefix $CXX"
+                ;;
 
-        "")         ;;
+    "")         ;;
 
-        *)          echo "invalid argument: '$1'" 1>&2 ;;
-    esac
+    *)          echo "invalid argument: '$1'" 1>&2 ;;
+  esac
 
-    echo "CC=$CC"
-    echo "CXX=$CXX"
+  echo "CC=$CC"
+  echo "CXX=$CXX"
+}
+
+function wcc {
+  echo "$CC & $CXX"
 }
 
 export LOCAL="$HOME/.local"
@@ -186,12 +189,13 @@ export ANACONDA_PATH="$LOCAL/anaconda"
 export PATH="$ANACONDA_PATH/bin:$PATH"
 
 function wpy {
-    basename $(readlink -f $ANACONDA_PATH)
+  basename $(readlink -f $ANACONDA_PATH)
 }
 
 function pyset {
-    ln -fs $LOCAL/anaconda$1 $ANACONDA_PATH
-    echo "set to $(wpy)"
+  rm $ANACONDA_PATH
+  ln -s $LOCAL/anaconda$1 $ANACONDA_PATH
+  echo "set to $(wpy)"
 }
 
 function wja {
@@ -205,31 +209,33 @@ function jaset {
 
 function do_test_suite()
 {
-    echo "Will run test suite on IP $1"
+  echo "Will run test suite on IP $1"
 
-    echo "removing gadle cache"
-    rm -rf "$HOME/.gradle/caches"
+  echo "removing gadle cache"
+  rm -rf "$HOME/.gradle/caches"
 
-    export ANDROID_HOME="$LOCAL/android-studio/plugins/android-ndk/"
-    export JAVA_HOME="$LOCAL/android-studio/jre"
+  export ANDROID_HOME="$LOCAL/android-studio/plugins/android-ndk/"
+  export JAVA_HOME="$LOCAL/android-studio/jre"
 
-    echo "Connect to robot"
-    adb connect $1:5555
-    adb wait-for-device
-    sleep 1
-    echo "Keep it busy..."
-    adb shell ping www.google.com > /dev/null &
-    adb devices
+  echo "Connect to robot"
+  adb connect $1:5555 && adb wait-for-device
+  sleep 1
+  echo "Keep it busy..."
+  adb shell ping www.google.com > /dev/null &
+  adb devices
 
-    cd "$HOME/workspace/wt/testsuite/testsuite-android-libqi"
-    git pull
-    ./gradlew connectedAndroidTest -PtestAnnotations=SanityTest -PlibqiJavaVersion=daily
-    adb disconnect $1
+  cd "$HOME/workspace/wt/testsuite/testsuite-java-libqi"
+  git pull
+  ./gradlew connectedAndroidTest \
+    -Pandroid.testInstrumentationRunnerArguments.annotation=com.softbankrobotics.javalibqitests.annotations.Sanity\
+    -Pandroid.testInstrumentationRunnerArguments.password=nao\
+    -PlibqiJavaVersion=daily
+  adb disconnect $1
 
-    unset ANDROID_HOME
-    unset JAVA_HOME
+  unset ANDROID_HOME
+  unset JAVA_HOME
 
-    echo "FINISHED"
+  echo "FINISHED"
 }
 
 alias py="ipython -i"
@@ -244,11 +250,16 @@ alias lg1="git log --graph --abbrev-commit --decorate --format=format:'%C(bold b
 alias lg2="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'"
 
 function set_governor {
-    sudo cpupower frequency-set --governor $1 > /dev/null
-    echo "set mode to $1"
+  sudo cpupower frequency-set --governor $1 > /dev/null
+  echo "set mode to $1"
 }
 
 alias fire="set_governor performance"
 alias oldfire="set_governor powersave"
 
 alias cdd="cd $HOME/workspace/wt/develop/sdk/"
+alias cdo="cd $HOME/workspace/other/"
+alias cdp="cd $HOME/workspace/perso/"
+alias cdb="cd $HOME/workspace/bench/"
+
+chcc gcc-5 >> /dev/null
