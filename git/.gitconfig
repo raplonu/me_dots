@@ -1,0 +1,6 @@
+[user]
+	email = raplonu.jb@gmail.com
+	name = raplonu
+[core]
+	excludesfile = /home/jbernard/.gitignore_global
+	editor = code --wait
