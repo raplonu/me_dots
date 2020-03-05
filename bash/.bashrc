@@ -131,8 +131,8 @@ ex() {
         fi
 
         case $i in
-            *.t@(gz|lz|xz|b@(2|z?(2))|a@(z|r?(.@(Z|bz?(2)|gz|lzma|xz)))))
-                   c=(bsdtar xvf);;
+              # *.t@(gz|lz|xz|b@(2|z?(2))|a@(z|r?(.@(Z|bz?(2)|gz|lzma|xz)))))
+              #        c=(bsdtar xvf);;
             *.7z)  c=(7z x);;
             *.Z)   c=(uncompress);;
             *.bz2) c=(bunzip2);;
@@ -152,8 +152,10 @@ ex() {
 }
 
 EC() {
-	echo -e '\e[1;33m'code $?'\e[m\n'
+	echo -e '\e[1;33m'code $?'\e[m'
 }
+
+# Show every error code
 trap EC ERR
 
 cl() {
@@ -167,7 +169,7 @@ cl() {
 }
 
 calc() {
-    echo "scale=3;$@" | bc -l
+    python -c "print($@)"
 }
 
 function swap()
@@ -211,75 +213,7 @@ function wcc {
   echo "$CC & $CXX"
 }
 
-export LOCAL="$HOME/.local"
-export PATH="$LOCAL/bin:$PATH"
-
-export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
-
-export ANACONDA_PATH="$LOCAL/anaconda"
-
-export PATH="$ANACONDA_PATH/bin:$PATH"
-
-function wpy {
-  basename $(readlink -f $ANACONDA_PATH)
-}
-
-function pyset {
-  rm $ANACONDA_PATH
-  ln -s $LOCAL/anaconda$1 $ANACONDA_PATH
-  echo "set to $(wpy)"
-}
-
-function wja {
-  archlinux-java get
-}
-
-function jaset {
-  sudo archlinux-java set java-$1-openjdk && \
-  echo "set to $(wja)"
-}
-
-function do_test_suite()
-{
-  echo "Will run test suite on IP $1"
-
-  echo "removing gadle cache"
-  rm -rf "$HOME/.gradle/caches"
-
-  export ANDROID_HOME="$LOCAL/android-studio/plugins/android-ndk/"
-  export JAVA_HOME="$LOCAL/android-studio/jre"
-
-  echo "Connect to robot"
-  adb connect $1:5555 && adb wait-for-device
-  sleep 1
-  echo "Keep it busy..."
-  adb shell ping www.google.com > /dev/null &
-  adb devices
-
-  cd "$HOME/workspace/wt/testsuite/testsuite-java-libqi"
-  git pull
-  ./gradlew connectedAndroidTest \
-    -Pandroid.testInstrumentationRunnerArguments.annotation=com.softbankrobotics.javalibqitests.annotations.Sanity\
-    -Pandroid.testInstrumentationRunnerArguments.password=nao\
-    -PlibqiJavaVersion=daily
-  adb disconnect $1
-
-  unset ANDROID_HOME
-  unset JAVA_HOME
-
-  echo "FINISHED"
-}
-
-alias py="ipython -i"
-alias o="xdg-open"
-
-alias ll="ls -l"
-alias la="ls -a"
-
-alias editrc="code ~/.bashrc"
-
-alias lg1="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'"
-alias lg2="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'"
+## Overclocking
 
 function set_governor {
   sudo cpupower frequency-set --governor $1 > /dev/null
@@ -289,9 +223,55 @@ function set_governor {
 alias fire="set_governor performance"
 alias oldfire="set_governor powersave"
 
-alias cdd="cd $HOME/workspace/wt/develop/sdk/"
+
+export LOCAL="$HOME/.local"
+export PATH="$LOCAL/bin:$PATH"
+export EDITOR="code"
+
+## Python
+
+export ANACONDA_PATH="$LOCAL/anaconda"
+export PATH="$ANACONDA_PATH/bin:$PATH"
+
+# Return the actual python version
+function wpy {
+  basename $(readlink -f $ANACONDA_PATH)
+}
+
+# Set python version
+function pyset {
+  rm $ANACONDA_PATH
+  ln -s $LOCAL/anaconda$1 $ANACONDA_PATH
+  echo "set to $(wpy)"
+}
+
+## JAVA
+
+# Return the actual java version
+function wja {
+  archlinux-java get
+}
+
+# Set the java version
+# Need sudo
+function jaset {
+  sudo archlinux-java set java-$1-openjdk && \
+  echo "set to $(wja)"
+}
+
+alias py="ipython -i"
+alias o="xdg-open"
+
+alias ll="ls -l"
+alias la="ls -a"
+
+alias editrc="$EDITOR ~/.bashrc"
+
 alias cdo="cd $HOME/workspace/other/"
 alias cdp="cd $HOME/workspace/perso/"
-alias cdb="cd $HOME/workspace/bench/"
 
-chcc gcc-5 >> /dev/null
+export BASH_LOCAL="$HOME/.bashrc_local"
+
+if test -f "$BASH_LOCAL"; then
+  source "$BASH_LOCAL";
+fi
