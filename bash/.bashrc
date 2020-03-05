@@ -225,6 +225,7 @@ alias oldfire="set_governor powersave"
 
 
 export LOCAL="$HOME/.local"
+export WORKSPACE="$HOME/workspace"
 export PATH="$LOCAL/bin:$PATH"
 export EDITOR="code"
 
@@ -267,8 +268,8 @@ alias la="ls -a"
 
 alias editrc="$EDITOR ~/.bashrc"
 
-alias cdo="cd $HOME/workspace/other/"
-alias cdp="cd $HOME/workspace/perso/"
+alias cdo="cd $WORKSPACE/other/"
+alias cdp="cd $WORKSPACE/perso/"
 
 export BASH_LOCAL="$HOME/.bashrc_local"
 
