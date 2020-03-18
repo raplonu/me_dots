@@ -225,6 +225,7 @@ alias oldfire="set_governor powersave"
 
 
 export LOCAL="$HOME/.local"
+export WORKON_HOME="$LOCAL/envs"
 export WORKSPACE="$HOME/workspace"
 export PATH="$LOCAL/bin:$PATH"
 export EDITOR="code"
@@ -233,6 +234,8 @@ export EDITOR="code"
 
 export ANACONDA_PATH="$LOCAL/anaconda"
 export PATH="$ANACONDA_PATH/bin:$PATH"
+
+source $ANACONDA_PATH/bin/virtualenvwrapper.sh
 
 # Return the actual python version
 function wpy {

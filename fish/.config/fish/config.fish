@@ -9,6 +9,9 @@ set -gx EDITOR "code"
 set -gx ANACONDA_PATH $LOCAL/anaconda
 set -gx PATH $ANACONDA_PATH/bin $PATH
 
+set -gx VIRTUALFISH_HOME $LOCAL/envs
+eval (python -m virtualfish)
+
 # spacefish
 set -gx SPACEFISH_PROMPT_ADD_NEWLINE false
 set -gx SPACEFISH_PROMPT_SEPARATE_LINE false
