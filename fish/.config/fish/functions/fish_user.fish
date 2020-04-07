@@ -41,7 +41,13 @@ end
 
 function pyset
   rm $ANACONDA_PATH
-  ln -s $LOCAL/anaconda$argv[1] $ANACONDA_PATH
+
+  if [ $argv[1] = "system" ]
+    ln -s system $ANACONDA_PATH
+  else
+    ln -s $LOCAL/anaconda$argv[1] $ANACONDA_PATH
+  end
+
   echo "set to "(wpy)
 end
 
