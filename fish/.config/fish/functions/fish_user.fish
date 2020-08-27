@@ -60,7 +60,7 @@ function jaset
   echo "set to "(wja)
 end
 
-# function chcc 
+# function chcc
 #   switch ($argv[1]) in
 #     --unset)        unset CC ; unset CXX ;;
 
@@ -112,7 +112,7 @@ function get_bind
 end
 
 function bind_ssh
-  if not test (count $argv) = 2 
+  if not test (count $argv) = 2
     echo 'Give the sever and a port to bind to ( bind_ssh server.com 1234 ).'
     return -1
   end
@@ -145,7 +145,7 @@ function unbind_ssh
   echo 'Unbinding '$ssh_bind '...'
 
   set ssh_procs (ps x | grep -E "ssh.*$ssh_bind" | grep -v "grep")
-  
+
   for proc in $ssh_procs
     echo "Killing $proc"
     set ssh_pid (string split ' ' -- $proc)[2]
@@ -155,6 +155,6 @@ function unbind_ssh
       kill -9 $ssh_pid
     end
   end
-  
+
   echo 'Unbinding done.'
 end

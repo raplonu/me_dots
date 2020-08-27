@@ -235,7 +235,9 @@ export EDITOR="code"
 export ANACONDA_PATH="$LOCAL/anaconda"
 export PATH="$ANACONDA_PATH/bin:$PATH"
 
-source $ANACONDA_PATH/bin/virtualenvwrapper.sh
+if test -f "$ANACONDA_PATH/bin/virtualenvwrapper.sh"; then
+  source $ANACONDA_PATH/bin/virtualenvwrapper.sh
+fi
 
 # Return the actual python version
 function wpy {

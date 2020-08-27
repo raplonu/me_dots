@@ -6,17 +6,19 @@ set -gx PATH $LOCAL/bin $PATH
 
 set -gx EDITOR "code"
 
-set -gx ANACONDA_PATH $LOCAL/anaconda
-set -gx PATH $ANACONDA_PATH/bin $PATH
-
-set -gx VIRTUALFISH_HOME $LOCAL/envs
-eval (python -m virtualfish)
+# rust
+set -gx CARGO_PATH $HOME/.cargo
+set -gx PATH $CARGO_PATH/bin $PATH
 
 # spacefish
 set -gx SPACEFISH_PROMPT_ADD_NEWLINE false
 set -gx SPACEFISH_PROMPT_SEPARATE_LINE false
 
 . ~/.config/fish/functions/fish_user.fish
+. ~/.config/fish/functions/fish_ssh_agent.fish
 
 try_source $FISH_LOCAL/config.local.fish
 try_source $FISH_LOCAL/functions/fish_user.local.fish
+
+fish_ssh_agent
+ssh-add ^ /dev/null

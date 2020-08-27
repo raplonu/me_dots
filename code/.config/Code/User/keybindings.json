@@ -15,5 +15,13 @@
     {
         "key": "ctrl+tab",
         "command": "-workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup"
+    },
+    {
+        "key": "ctrl+m ctrl+n",
+        "command": "fuzzySearch.activeTextEditor"
+    },
+    {
+        "key": "alt+m",
+        "command": "fuzzySearch.activeTextEditorWithCurrentSelection"
     }
 ]

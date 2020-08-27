@@ -1,8 +1,14 @@
 # python
 .venv
-
+*.egg-info
+dist
+*.pyc
 # C/C++
 build
 
-#vscode
+# vscode
 .vscode
+
+# misc
+tmp
+temp
