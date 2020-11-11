@@ -5,6 +5,7 @@ set -gx VIRTUALFISH_HOME $LOCAL/envs
 set -gxp fish_user_paths $LOCAL/bin
 
 set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
+set -gx SPACEFISH_USER_SHOW false
 
 set -gx EDITOR "code"
 
@@ -24,5 +25,5 @@ export LC_ALL=C
 try_source $FISH_LOCAL/config.local.fish
 try_source $FISH_LOCAL/functions/fish_user.local.fish
 
-# fish_ssh_agent
-# ssh-add ^ /dev/null
+fish_ssh_agent
+ssh-add ^ /dev/null
