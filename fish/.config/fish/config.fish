@@ -9,6 +9,7 @@ set -gx SPACEFISH_USER_SHOW needed
 
 set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
 set -gx MANROFFOPT "-c"
+set -gx SPACEFISH_USER_SHOW false
 
 set -gx EDITOR "code"
 
@@ -28,7 +29,12 @@ export LC_ALL=C
 try_source $FISH_LOCAL/config.local.fish
 try_source $FISH_LOCAL/functions/fish_user.local.fish
 
+<<<<<<< HEAD
 # fish_ssh_agent
 # ssh-add ^ /dev/null
 
 set -gx bash_no_fish "true"
+=======
+fish_ssh_agent
+ssh-add ^ /dev/null
+>>>>>>> 7c65307138535bac73dde3788b822a1fe3df86b4

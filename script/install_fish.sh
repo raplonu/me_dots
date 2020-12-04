@@ -23,7 +23,7 @@ curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fi
 omf install spacefish
 
 # install virtual fish https://github.com/justinmayer/virtualfish
-python -m pip install virtualfish
+python3 -m pip install virtualfish
 vf install
 vf addplugins auto_activation projects
 
