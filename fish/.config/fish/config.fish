@@ -4,7 +4,11 @@ set -gx WORKSPACE $HOME/workspace
 set -gx VIRTUALFISH_HOME $LOCAL/envs
 set -gxp fish_user_paths $LOCAL/bin
 
+set -gx me_hostname $hostname
+set -gx SPACEFISH_USER_SHOW needed
+
 set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
+set -gx MANROFFOPT "-c"
 
 set -gx EDITOR "code"
 
@@ -26,3 +30,5 @@ try_source $FISH_LOCAL/functions/fish_user.local.fish
 
 # fish_ssh_agent
 # ssh-add ^ /dev/null
+
+set -gx bash_no_fish "true"
